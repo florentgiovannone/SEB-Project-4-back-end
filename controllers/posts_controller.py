@@ -2,12 +2,14 @@ from http import HTTPStatus
 from marshmallow.exceptions import ValidationError
 from flask import Blueprint, request, jsonify, g
 from models.posts_model import PostModel
-from models.comment_model import CommentModel
+from models.like_model import LikeModel
 from app import db
 from serializers.post_serializer import PostSerializer
 from serializers.comment_serializer import CommentSerializer
 from middleware.secure_route import secure_route
+from serializers.like_serializer import LikeSerializer
 
+like_serializer = LikeSerializer()
 post_serializer = PostSerializer()
 comment_serializer = CommentSerializer()
 
@@ -52,6 +54,47 @@ def create_post():
     except Exception as e:
         return {"message": "Something went wrong"}
 
+# TODO Get all likes
+# ! We need a decorator to specify the route.
+@router.route("/likes", methods=["GET"])
+def get_likes():
+    likes = db.session.query(LikeModel).all()
+    print(like_serializer.jsonify(likes, many=True))
+    return like_serializer.jsonify(likes, many=True)
+
+# TODO like a post
+@router.route("/posts/<int:post_id>/likes", methods=["POST"])
+@secure_route
+def like(post_id):
+    existing_post = PostModel.query.get(post_id)
+    if not existing_post:
+        return {"message": "No post found"}, HTTPStatus.NOT_FOUND
+    try:
+        like = like_serializer.load({})
+        like.user_id = g.current_user.id
+        like.post_id = post_id
+        like.save()
+    except ValidationError as e:
+        return {
+            "errors": e.message,
+            "message": "Something went wrong",
+        }, HTTPStatus.BAD_REQUEST
+    except Exception as e:
+        return {"message": "Something went very wrong"}
+    return like_serializer.jsonify("Liked")
+
+# TODO dislike a post
+@router.route("/likes/<int:like_id>", methods=["DELETE"])
+@secure_route
+def remove_like(like_id):
+
+    like = LikeModel.query.get(like_id)
+
+    if not like:
+        return {"message": "No like found"}, HTTPStatus.NOT_FOUND
+
+    like.remove()
+    return {"message": "like Deleted"}, HTTPStatus.OK
 
 # TODO Update a post
 @router.route("/posts/<int:post_id>", methods=["PUT"])
@@ -88,13 +131,22 @@ def update_post(post_id):
 @router.route("/posts/<int:post_id>", methods=["DELETE"])
 @secure_route
 def delete_single_post(post_id):
-    post = db.session.query(PostModel).get(post_id)
-    if post is None:
+    post = PostModel.query.get(post_id)
+    if not post:
         return jsonify({"message": "post not found"}, HTTPStatus.NOT_FOUND)
-    if post != g.current_user.id:
-        return {"Go away!!"}
 
-    db.session.delete(post)
-    db.session.commit()
-    return " ", HTTPStatus.NO_CONTENT
+    post.remove()
+    return jsonify({"error":"post deleted"})
 
+
+@router.route("/posts/<int:post_id>", methods=["DELETE"])
+@secure_route
+def remove_post(like_id):
+
+    like = LikeModel.query.get(like_id)
+
+    if not like:
+        return {"message": "No like found"}, HTTPStatus.NOT_FOUND
+
+    like.remove()
+    return {"message": "like Deleted"}, HTTPStatus.OK
