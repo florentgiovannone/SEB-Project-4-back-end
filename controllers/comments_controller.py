@@ -85,3 +85,30 @@ def like_comment(comment_id):
     except Exception as e:
         return {"message": "Something went very wrong"}, HTTPStatus.BAD_REQUEST
     return like_serializer.jsonify("Liked")
+
+
+# TODO Update a comment
+@router.route("/comments/<int:comment_id>", methods=["PUT"])
+@secure_route
+def update_comment(comment_id):
+
+    try:
+        comment = db.session.query(CommentModel).get(comment_id)
+        if comment is None:
+            return jsonify({"message": "comment not found"}, HTTPStatus.NOT_FOUND)
+        if comment.user_id != g.current_user.id:
+            return {"message": "Go away!!"}
+
+        comment_data = request.json
+        comment.content = comment_data.get("content", comment.content)
+        db.session.commit()
+        return comment_serializer.jsonify(comment)
+
+    except ValidationError as e:
+        return {
+            "errors": e.message,
+            "message": "Something went wrong",
+        }, HTTPStatus.BAD_REQUEST
+
+    except Exception as e:
+        return {"message": "Something went wrong"}, HTTPStatus.BAD_REQUEST

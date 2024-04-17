@@ -14,6 +14,10 @@ class LikeModel(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     user = db.relationship(UserModel, backref="like")
 
+    # from models.comment_model import CommentModel
+    # comment_id = db.Column(db.Integer, db.ForeignKey("comments.id"), nullable=False)
+    # comment = db.relationship(CommentModel, backref="like")
+
     def save(self):
         db.session.add(self)
         db.session.commit()
