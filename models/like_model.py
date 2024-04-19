@@ -6,9 +6,7 @@ class LikeModel(db.Model):
     __tablename__ = "likes"
     id = db.Column(db.Integer, primary_key=True, unique=True)
 
-    from models.posts_model import PostModel
     post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)
-    post = db.relationship("PostModel", backref="like")
 
     from models.users_model import UserModel
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
