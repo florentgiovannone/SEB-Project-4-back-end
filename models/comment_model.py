@@ -12,7 +12,6 @@ class CommentModel(db.Model):
     # ! ForeignKey tells you which column to point at (teas.id)
     # ! so that every comment points to a specific unique tea.
     # ! You usually give it the primarykey of a table, e.g. teas.id
-    from models.posts_model import PostModel
     post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)
 
 
