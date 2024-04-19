@@ -54,6 +54,7 @@ def create_post():
     except Exception as e:
         return {"message": "Something went wrong"}
 
+
 # TODO Get all likes
 # ! We need a decorator to specify the route.
 @router.route("/likes", methods=["GET"])
@@ -61,6 +62,7 @@ def get_likes():
     likes = db.session.query(LikeModel).all()
     print(like_serializer.jsonify(likes, many=True))
     return like_serializer.jsonify(likes, many=True)
+
 
 # TODO like a post
 @router.route("/posts/<int:post_id>/likes", methods=["POST"])
@@ -83,6 +85,7 @@ def like(post_id):
         return {"message": "Something went very wrong"}
     return like_serializer.jsonify("Liked")
 
+
 # TODO dislike a post
 @router.route("/likes/<int:like_id>", methods=["DELETE"])
 @secure_route
@@ -96,6 +99,7 @@ def remove_like(like_id):
     like.remove()
     return {"message": "like Deleted"}, HTTPStatus.OK
 
+
 # TODO Update a post
 @router.route("/posts/<int:post_id>", methods=["PUT"])
 @secure_route
@@ -107,7 +111,7 @@ def update_post(post_id):
             return jsonify({"message": "post not found"}, HTTPStatus.NOT_FOUND)
         if post.user_id != g.current_user.id:
             return {"message": "Go away!!"}
-        
+
         post_data = request.json
         post.title = post_data.get("title", post.title)
         post.content = post_data.get("content", post.content)
@@ -136,7 +140,7 @@ def delete_single_post(post_id):
         return jsonify({"message": "post not found"}, HTTPStatus.NOT_FOUND)
 
     post.remove()
-    return jsonify({"error":"post deleted"})
+    return jsonify({"error": "post deleted"})
 
 
 @router.route("/posts/<int:post_id>", methods=["DELETE"])
