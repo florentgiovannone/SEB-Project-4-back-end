@@ -14,7 +14,6 @@ class PostModel(db.Model):
 
     # Define relationship with UserModel
     from models.users_model import UserModel
-
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     user = db.relationship("UserModel", backref="posts")
 
