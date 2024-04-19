@@ -8,11 +8,11 @@ class LikeModel(db.Model):
 
     from models.posts_model import PostModel
     post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)
-    post = db.relationship("PostModel", backref="like")
+
 
     from models.users_model import UserModel
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    user = db.relationship("UserModel", backref="like")
+    user = db.relationship("UserModel", backref="likes")
 
     # from models.comment_model import CommentModel
     # comment_id = db.Column(db.Integer, db.ForeignKey("comments.id"), nullable=False)

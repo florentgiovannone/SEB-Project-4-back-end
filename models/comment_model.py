@@ -14,11 +14,11 @@ class CommentModel(db.Model):
     # ! You usually give it the primarykey of a table, e.g. teas.id
     from models.posts_model import PostModel
     post_id = db.Column(db.Integer, db.ForeignKey("posts.id"), nullable=False)
-    post = db.relationship("PostModel", backref="comment")
+
 
     from models.users_model import UserModel
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    user = db.relationship("UserModel", backref="comment")
+    user = db.relationship("UserModel", backref="comments")
 
     def save(self):
         db.session.add(self)
