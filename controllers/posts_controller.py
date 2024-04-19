@@ -16,13 +16,6 @@ comment_serializer = CommentSerializer()
 router = Blueprint("posts", __name__)
 
 
-# TODO Get all the post
-# ! We need a decorator to specify the route.
-@router.route("/posts", methods=["GET"])
-def get_posts():
-    posts = db.session.query(PostModel).all()
-    print(post_serializer.jsonify(posts, many=True))
-    return post_serializer.jsonify(posts, many=True)
 
 
 # TODO Get a post by its ID
