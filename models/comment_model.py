@@ -5,7 +5,10 @@ class CommentModel(db.Model):
 
     __tablename__ = "comments"
     id = db.Column(db.Integer, primary_key=True, unique=True)
-    content = db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text, nullable=False)    
+    comment_date = db.Column(db.Text, nullable=False)
+    code = db.Column(db.Text, nullable=True)
+    
 
     # ! ForeignKey tells you which column to point at (teas.id)
     # ! so that every comment points to a specific unique tea.

@@ -215,3 +215,11 @@ def update_user(user_id):
 
     except Exception as e:
         return {"message": "Something went very wrong"}, HTTPStatus.BAD_REQUEST
+
+
+@router.route("/all_users", methods=["GET"])
+def get_all_user():
+    users = db.session.query(UserModel).all()
+    print(user_serializer.jsonify(users, many=True))
+    return user_serializer.jsonify(users, many=True)
+

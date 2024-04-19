@@ -9,6 +9,8 @@ class PostModel(db.Model):
     code = db.Column(db.Text, nullable=True)
     image = db.Column(db.Text, nullable=True)
     category = db.Column(db.Text, nullable=False)
+    
+    post_date = db.Column(db.Text, nullable=False)
 
     # Define relationship with UserModel
     from models.users_model import UserModel

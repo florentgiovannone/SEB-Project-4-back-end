@@ -1,2 +1,2 @@
 db_URI = "postgresql://localhost:5432/posts_db"
-SECRET = "elephantmajescticcheesewingscoinpotatoes"
+SECRET = "t3cbPSmNgXn-bZ0wGxR8n0fpMC0"
