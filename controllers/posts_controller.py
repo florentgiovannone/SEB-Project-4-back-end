@@ -92,7 +92,6 @@ def like(post_id):
 def remove_like(like_id):
 
     like = LikeModel.query.get(like_id)
-
     if not like:
         return {"message": "No like found"}, HTTPStatus.NOT_FOUND
 

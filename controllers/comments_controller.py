@@ -51,18 +51,14 @@ def create_comment(post_id):
 
     return comment_serializer.jsonify(comment), HTTPStatus.CREATED
 
-
 @router.route("/comments/<int:comment_id>", methods=["DELETE"])
 @secure_route
 def remove_comment(comment_id):
 
     comment = CommentModel.query.get(comment_id)
-
     if not comment:
         return {"message": "No comment found"}, HTTPStatus.NOT_FOUND
-
     comment.remove()
-
     return {"message": "Comment Deleted"}, HTTPStatus.OK
 
 

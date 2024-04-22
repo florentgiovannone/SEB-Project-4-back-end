@@ -9,14 +9,9 @@ class PostModel(db.Model):
     code = db.Column(db.Text, nullable=True)
     image = db.Column(db.Text, nullable=True)
     category = db.Column(db.Text, nullable=False)
-
-    post_date = db.Column(db.Text, nullable=False)
-
-    # from models.comment_model import CommentModel
-    # comments = db.relationship("CommentModel", backref="comments", cascade="all, delete")
-    # from models.like_model import LikeModel
-    # likes = db.relationship("LikeModel", backref="likes", cascade="all, delete")
-
+    categoryContent = db.Column(db.Text, nullable=True)
+    post_date = db.Column(db.Text, nullable=True)
+    
     # Define relationship with UserModel
     from models.users_model import UserModel
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)

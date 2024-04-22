@@ -44,7 +44,7 @@ with app.app_context():
             email="f.giovannone@me.com",
             password="Hello123",
             password_confirmation="Hello123",
-            image="https://i.postimg.cc/hGNGWybj/IMG-5063.jpg",
+            image="https://res.cloudinary.com/ded4jhx7i/image/upload/v1713790251/fhhazkee4tmc4q576hlc.jpg",
         )
         Florent_two = UserModel(
             firstname="Florent",
@@ -53,8 +53,7 @@ with app.app_context():
             email="f.giovannon2@me.com",
             password="Hello123",
             password_confirmation="Hello123",
-            image="https://i.postimg.cc/hGNGWybj/IMG-5063.jpg",
-
+            image="https://res.cloudinary.com/ded4jhx7i/image/upload/v1713790251/fhhazkee4tmc4q576hlc.jpg",
         )
 
         db.session.add(Florent)
@@ -69,21 +68,24 @@ with app.app_context():
             "{ const token = localStorage.getItem('token')"
             "const resp = await axios.get(`api/posts`)"
             "setPost(resp.data)}console.log(user)",
-            category="Proud",
+            category="is feeling",
+            categoryContent="Proud",
             user_id=Florent.id,
             post_date=current_date_time,
         )
         second_post = PostModel(
             title="2nd post!",
             image="https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg",
-            category="Proud",
+            category="is feeling",
+            categoryContent="Proud",
             user_id=Florent_two.id,
             post_date=current_date_time,
         )
         third_post = PostModel(
             title="3rd post!",
             content="this is my third post",
-            category="Proud",
+            category="is feeling",
+            categoryContent="Proud",
             user_id=Florent.id,
             post_date=current_date_time,
         )
