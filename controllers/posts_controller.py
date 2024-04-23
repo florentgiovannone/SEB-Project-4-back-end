@@ -21,6 +21,7 @@ router = Blueprint("posts", __name__)
 @router.route("/posts", methods=["GET"])
 def get_posts():
     posts = db.session.query(PostModel).all()
+    
     print(post_serializer.jsonify(posts, many=True))
     return post_serializer.jsonify(posts, many=True)
 

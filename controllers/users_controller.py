@@ -222,3 +222,14 @@ def get_all_user():
     users = db.session.query(UserModel).all()
     print(user_serializer.jsonify(users, many=True))
     return user_serializer.jsonify(users, many=True)
+
+
+@router.route("/user/<int:user_id>", methods=["DELETE"])
+@secure_route
+def delete_user(user_id):
+    user = UserModel.query.get(user_id)
+    if not user:
+        return jsonify({"message": "user not found"}, HTTPStatus.NOT_FOUND)
+
+    user.remove()
+    return jsonify({"error": "user deleted"})

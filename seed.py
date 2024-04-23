@@ -26,7 +26,7 @@ current_time = current_datetime.strftime("%H:%M:%S")
 print("current time = ", current_time)
 
 # getting the date and time from the current date and time in the given format
-current_date_time = current_datetime.strftime("%d/%m/%Y | %H:%M")
+current_date_time = current_datetime.strftime("%d/%m/%Y%H:%M")
 print("current date and time = ", current_date_time)
 
 
@@ -64,10 +64,6 @@ with app.app_context():
             title="1st post!",
             content="this is my second post and it's without image",
             image="https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg",
-            code="async function fetchPosts()"
-            "{ const token = localStorage.getItem('token')"
-            "const resp = await axios.get(`api/posts`)"
-            "setPost(resp.data)}console.log(user)",
             category="is feeling",
             categoryContent="Proud",
             user_id=Florent.id,
@@ -94,47 +90,6 @@ with app.app_context():
         db.session.add(third_post)
         db.session.commit()
 
-        first_comment = CommentModel(
-            content="Loving it 1!!",
-            code="Loving it 1!!",
-            post_id=first_post.id,
-            user_id=Florent.id,
-            comment_date=current_date_time,
-        )
-        second_comment = CommentModel(
-            content="Loving it 2!!",
-            code="Loving it 2!!",
-            post_id=second_post.id,
-            user_id=Florent.id,
-            comment_date=current_date_time,
-        )
-        third_comment = CommentModel(
-            content="Loving it 3!!",
-            code="Loving it 3!!",
-            post_id=third_post.id,
-            user_id=Florent.id,
-            comment_date=current_date_time,
-        )
-
-        db.session.add(first_comment)
-        db.session.add(second_comment)
-        db.session.add(third_comment)
-        db.session.commit()
-
-        first_like = LikeModel(
-
-            post_id=first_post.id,
-            user_id=Florent.id,
-        )
-
-        second_like = LikeModel(
-
-            post_id=first_comment.id,
-            user_id=Florent_two.id,
-        )
-
-        db.session.add(first_like)
-        db.session.add(second_like)
         db.session.commit()
         print("seeded!")
 
