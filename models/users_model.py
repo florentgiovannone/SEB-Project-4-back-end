@@ -24,3 +24,7 @@ class UserModel(db.Model):
 
     def validate_password(self, password_plaintext):
         return bcrypt.check_password_hash(self.password_hash, password_plaintext)
+
+    def remove(self):
+        db.session.delete(self)
+        db.session.commit()
