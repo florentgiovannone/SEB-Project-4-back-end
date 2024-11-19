@@ -136,18 +136,35 @@ def signup():
         return {"error": "Something went very wrong"}
 
 
+
+
+
+
+
+
+
+
+
 @router.route("/login", methods=["POST"])
 def login():
-    credentials_dictionary = request.json
+    credentials = request.json
+    username = credentials.get("username")
+    password = credentials.get("password")
+
+    if not username or not password:
+        return jsonify({"error": "Username and password are required"}), HTTPStatus.BAD_REQUEST
+
     user = (
         db.session.query(UserModel)
-        .filter_by(username=credentials_dictionary["username"])
+        .filter_by(username=username)
         .first()
     )
+
     if not user:
-        return jsonify({"error": "Login failled. Try again"})
-    if not user.validate_password(credentials_dictionary["password"]):
-        return jsonify({"error": "Login failled. Try again"})
+        return jsonify({"error": "Invalid username or password"}), HTTPStatus.UNAUTHORIZED
+
+    if not user.validate_password(password):
+        return jsonify({"error": "Invalid username or password"}), HTTPStatus.UNAUTHORIZED
 
     payload = {
         "exp": datetime.now(timezone.utc) + timedelta(days=1),
@@ -155,10 +172,20 @@ def login():
         "sub": user.id,
     }
 
-    secret = SECRET
+    token = jwt.encode(payload, SECRET, algorithm="HS256")
+    return jsonify({"message": "Login successful.", "token": token}),HTTPStatus.OK
 
-    token = jwt.encode(payload, secret, algorithm="HS256")
-    return {"message": "Login successful.", "token": token}
+
+
+
+
+
+
+
+
+
+
+
 
 
 @router.route("/user", methods=["GET"])

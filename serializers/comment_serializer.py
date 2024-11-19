@@ -1,5 +1,5 @@
 from app import marshy
-from marshmallow import fields
+from marshmallow import fields # type: ignore
 from models.comment_model import CommentModel
 from serializers.like_serializer import LikeSerializer
 from serializers.user_serializer import UserSerializer

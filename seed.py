@@ -26,7 +26,7 @@ current_time = current_datetime.strftime("%H:%M:%S")
 print("current time = ", current_time)
 
 # getting the date and time from the current date and time in the given format
-current_date_time = current_datetime.strftime("%d/%m/%Y%H:%M")
+current_date_time = current_datetime.strftime("%d/%m/%Y | %H:%M")
 print("current date and time = ", current_date_time)
 
 
