@@ -46,18 +46,18 @@ with app.app_context():
             password_confirmation="Hello123",
             image="https://res.cloudinary.com/ded4jhx7i/image/upload/v1713790251/fhhazkee4tmc4q576hlc.jpg",
         )
-        Florent_two = UserModel(
-            firstname="Florent",
-            lastname="Giovannone",
-            username="flo2",
+        Test = UserModel(
+            firstname="Test",
+            lastname="Test",
+            username="Testname",
             email="f.giovannon2@me.com",
-            password="Hello123",
-            password_confirmation="Hello123",
+            password="Testword123!",
+            password_confirmation="Testword123!",
             image="https://res.cloudinary.com/ded4jhx7i/image/upload/v1713790251/fhhazkee4tmc4q576hlc.jpg",
         )
 
         db.session.add(Florent)
-        db.session.add(Florent_two)
+        db.session.add(Test)
         db.session.commit()
 
         first_post = PostModel(
@@ -74,7 +74,7 @@ with app.app_context():
             image="https://www.adorama.com/alc/wp-content/uploads/2018/11/landscape-photography-tips-yosemite-valley-feature.jpg",
             category="is feeling",
             categoryContent="Proud",
-            user_id=Florent_two.id,
+            user_id=Test.id,
             post_date=current_date_time,
         )
         third_post = PostModel(

@@ -135,16 +135,6 @@ def signup():
     except Exception as e:
         return {"error": "Something went very wrong"}
 
-
-
-
-
-
-
-
-
-
-
 @router.route("/login", methods=["POST"])
 def login():
     credentials = request.json
@@ -174,19 +164,6 @@ def login():
 
     token = jwt.encode(payload, SECRET, algorithm="HS256")
     return jsonify({"message": "Login successful.", "token": token}),HTTPStatus.OK
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @router.route("/user", methods=["GET"])
 @secure_route
