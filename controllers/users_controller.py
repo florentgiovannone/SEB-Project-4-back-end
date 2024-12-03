@@ -19,121 +19,58 @@ router = Blueprint("users", __name__)
 def signup():
     try:
         user_dictionary = request.json
-        # ! Checking if firstname was entered
-        firstname_to_enter = user_dictionary.get("firstname")
-        if not firstname_to_enter:
-            return (
-                jsonify({"error": "you need to enter an firstname"}),
-                HTTPStatus.BAD_REQUEST,
-            )
-        # ! Checking if lastname was entered
-        lastname_to_enter = user_dictionary.get("lastname")
-        if not lastname_to_enter:
-            return (
-                jsonify({"error": "you need to enter an lastname"}),
-                HTTPStatus.BAD_REQUEST,
-            )
 
-        # ! Checking if email exist and if email was entered
-        email_to_enter = user_dictionary.get("email")
-        if not email_to_enter:
-            return (
-                jsonify({"error": "you need to enter an email"}),
-                HTTPStatus.BAD_REQUEST,
-            )
-        email = (
-            db.session.query(UserModel)
-            .filter_by(email=user_dictionary["email"])
-            .first()
-        )
-        if email:
-            return jsonify({"error": "The email already exist"}), HTTPStatus.BAD_REQUEST
+        def validate_field(field_name, error_message):
+            value = user_dictionary.get(field_name)
+            if not value:
+                raise ValidationError({field_name: error_message})
+            return value
 
-        # ! Checking if username exist and if username was entered
-        username_to_enter = user_dictionary.get("username")
-        if not username_to_enter:
-            return (
-                jsonify({"error": "you need to enter a username"}),
-                HTTPStatus.BAD_REQUEST,
-            )
-        username = (
-            db.session.query(UserModel)
-            .filter_by(username=user_dictionary["username"])
-            .first()
-        )
-        if username:
-            return (
-                jsonify({"error": "The username already exist"}),
-                HTTPStatus.BAD_REQUEST,
-            )
-        if username == "":
-            return (
-                jsonify({"error": "you need to enter an email"}),
-                HTTPStatus.BAD_REQUEST,
-            )
+        def validate_password(password, comnfrim_password):
+            spec_chart = ["!", "@", "#", "$", "%", "&", "*"]
+            if password != comnfrim_password:
+                raise ValidationError({"password_confirmation": "Password do not match"})
+            if not ( 8 <= len(password) <= 20):
+                raise ValidationError(
+                    {"password": "Password needs to be between 8 and 20 characters long"})
+            if not re.search("[a-z]", password):
+                raise ValidationError(
+                    {"password": "Password needs to contain at least 1 lowercase letter"})
+            if not re.search("[A-Z]", password):
+                raise ValidationError(
+                    {"password": "Password needs to contain at least 1 uppercase letter"})
+            if not re.search("[0-9]", password):
+                raise ValidationError(
+                    {"password": "Password needs to contain at least 1 digit"}
+                )
+            if not any(char in spec_chart for char in password):
+                raise ValidationError(
+                    {"password": "Password needs to contain at least 1 special character"}
+                )
+            
+        validate_field("firstname": "You nees to enter a firstname")
+        validate_field("lastname": "You nees to enter a lastname")
+        email = validate_field("email": "You nees to enter a email")
+        username = validate_field("username": "You nees to enter a username")
+        password = validate_field("password": "You nees to enter a password")
+        password_confirmation = validate_field("password_confirmation": "You nees to confirm your password")
 
-        # ! Checking if password are the same and if it meets requirements
-        password = user_dictionary.get("password")
-        password_confirmation = user_dictionary.get("password_confirmation")
-        if password != password_confirmation:
-            return jsonify({"error": "Passwords do not match"}), HTTPStatus.BAD_REQUEST
-        spec_chart = ["!", "@", "#", "$", "%", "&", "*"]
-        if len(password) < 8:
-            return (
-                jsonify(
-                    {"error": "Password needs to be a minimum of 8 characters long"}
-                ),
-                HTTPStatus.BAD_REQUEST,
-            )
-        if len(password) > 20:
-            return (
-                jsonify(
-                    {"error": "Password needs to be a maximum of 20 characters long"}
-                ),
-                HTTPStatus.BAD_REQUEST,
-            )
-        if not re.search("[a-z]", password):
-            return (
-                jsonify(
-                    {"error": "Password needs to contain at least 1 lowercase letter"}
-                ),
-                HTTPStatus.BAD_REQUEST,
-            )
-        if not re.search("[A-Z]", password):
-            return (
-                jsonify(
-                    {"error": "Password needs to contain at least 1 uppercase letter"}
-                ),
-                HTTPStatus.BAD_REQUEST,
-            )
-        if not re.search("[0-9]", password):
-            return (
-                jsonify({"error": "Password needs to contain at least 1 digit"}),
-                HTTPStatus.BAD_REQUEST,
-            )
-        if not any(char in spec_chart for char in password):
-            return (
-                jsonify(
-                    {"error": "Password needs to contain at least 1 special character"}
-                ),
-                HTTPStatus.BAD_REQUEST,
-            )
-        else:
-            user_model = user_serializer.load(user_dictionary)
-            db.session.add(user_model)
-            db.session.commit()
-            return user_serializer.jsonify(user_model)
+        if db.session.query(UserModel).filter_by(email=email).first():
+            return jsonify({"error": "The email already exists"}), HTTPStatus.BAD_REQUEST
+        if db.session.query(UserModel).filter_by(username=username).first():
+            return jsonify({"error": "The username already exists"}), HTTPStatus.BAD_REQUEST
+        
+        validate_password(password, password_confirmation)
+
+        user_model = user_serializer.load(user_dictionary)
+        db.session.add(user_model)
+        db.session.commit()
+
+        return user_serializer.jsonify(user_model), HTTPStatus.CREATED
     except ValidationError as e:
-        return (
-            jsonify(
-                {
-                    "error": "Something went wrong",
-                }
-            ),
-            HTTPStatus.BAD_REQUEST,
-        )
+        return jsonify({"error": e.messages,}),HTTPStatus.BAD_REQUEST,
     except Exception as e:
-        return {"error": "Something went very wrong"}
+        return jsonify({"error": "Something went wrong"}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 @router.route("/login", methods=["POST"])
 def login():
