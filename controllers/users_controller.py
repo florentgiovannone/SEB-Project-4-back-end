@@ -48,12 +48,12 @@ def signup():
                     {"password": "Password needs to contain at least 1 special character"}
                 )
             
-        validate_field("firstname": "You nees to enter a firstname")
-        validate_field("lastname": "You nees to enter a lastname")
-        email = validate_field("email": "You nees to enter a email")
-        username = validate_field("username": "You nees to enter a username")
-        password = validate_field("password": "You nees to enter a password")
-        password_confirmation = validate_field("password_confirmation": "You nees to confirm your password")
+        validate_field("firstname", "You need to enter a firstname")
+        validate_field("lastname", "You nees to enter a lastname")
+        email = validate_field("email", "You nees to enter a email")
+        username = validate_field("username", "You nees to enter a username")
+        password = validate_field("password", "You nees to enter a password")
+        password_confirmation = validate_field("password_confirmation", "You nees to confirm your password")
 
         if db.session.query(UserModel).filter_by(email=email).first():
             return jsonify({"error": "The email already exists"}), HTTPStatus.BAD_REQUEST
@@ -65,6 +65,7 @@ def signup():
         user_model = user_serializer.load(user_dictionary)
         db.session.add(user_model)
         db.session.commit()
+        
 
         return user_serializer.jsonify(user_model), HTTPStatus.CREATED
     except ValidationError as e:
