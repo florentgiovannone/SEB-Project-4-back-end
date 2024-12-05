@@ -17,4 +17,4 @@ def test_login_route(client):
     response = client.post("/api/login", json={"username": "Testname", "password": "Testword123!"})
 
     assert response.status_code == 200
-    assert "token" in response.get_json()
+    assert "token" in response.get_json() 
